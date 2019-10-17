@@ -1,4 +1,4 @@
-import { WorkoutDraftListVmI } from '@/ui/view-model/workout-draft-list-vm.interface'
+import { WorkoutDraftListVmI } from '@/view-model/workout-draft-list-vm.interface'
 import { inject, injectable } from 'tsyringe'
 import { WorkoutDraftListServiceI } from '@/domain/service-interfaces/workout-draft-list-service.interface'
 import { action, observable } from 'mobx'

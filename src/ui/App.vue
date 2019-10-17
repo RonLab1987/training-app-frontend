@@ -1,29 +1,27 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
-  </div>
-</template>
+  <v-app>
+    <v-navigation-drawer app fixed permanent>
+      <div class="">
+        <div class="display-1 pa-3 pt-6 text-center">O_o</div>
+        <div class="display-title pa-3 text-center">all–is–graph</div>
+      </div>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+      <v-list class="home-nav-menu" flat>
+        <v-list-item
+          class="text-center"
+          color="primary"
+          :to="{ name: 'draftList' }"
+        >
+          <v-list-item-title>
+            {{ $t('draftList.menu') }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-content>
+      <v-container>
+        <router-view />
+      </v-container>
+    </v-content>
+  </v-app>
+</template>

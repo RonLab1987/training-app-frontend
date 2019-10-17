@@ -12,9 +12,12 @@ export class ObservableEndpoint<T> extends ReplaySubject<T>
   _timeout: timeout
   private _timeoutId: number | undefined
   private _currentValue: any
-  private _isSuspended:boolean = false
+  private _isSuspended: boolean = false
 
-  constructor(readonly _dataCallback: PromisifyDataCallback, timeoutInSeconds: timeout) {
+  constructor(
+    readonly _dataCallback: PromisifyDataCallback,
+    timeoutInSeconds: timeout
+  ) {
     super(1)
     this._timeout = timeoutInSeconds ? timeoutInSeconds * 1000 : undefined
   }
@@ -88,11 +91,11 @@ export class ObservableEndpoint<T> extends ReplaySubject<T>
     super.unsubscribe()
   }
 
-  static init<T>(dataCallback: PromisifyDataCallback, timeoutInSeconds: timeout):ObservableEndpointI<T> {
-    const instance = new ObservableEndpoint<T>(
-      dataCallback,
-      timeoutInSeconds
-    )
+  static init<T>(
+    dataCallback: PromisifyDataCallback,
+    timeoutInSeconds: timeout
+  ): ObservableEndpointI<T> {
+    const instance = new ObservableEndpoint<T>(dataCallback, timeoutInSeconds)
     instance._getData()
     return instance
   }

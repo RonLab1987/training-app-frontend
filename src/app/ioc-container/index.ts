@@ -6,8 +6,8 @@ import { WorkoutDraftListRepositoryI } from '@/domain/repository-interfaces/work
 import { HttpWorkoutDraftListRepository } from '@/infrastructure/repository/http-workout-draft-list-repository'
 import { WorkoutDraftListServiceI } from '@/domain/service-interfaces/workout-draft-list-service.interface'
 import { WorkoutDraftListService } from '@/infrastructure/service/workout-draft-list-service'
-import { WorkoutDraftListVmI } from '@/ui/view-model/workout-draft-list-vm.interface'
-import { WorkoutDraftListVm } from '@/ui/view-model/workout-draft-list-vm'
+import { WorkoutDraftListVmI } from '@/view-model/workout-draft-list-vm.interface'
+import { WorkoutDraftListVm } from '@/view-model/workout-draft-list-vm'
 
 container.register<HttpApiAdapterI>('HttpApiAdapter', {
   useValue: new HttpApiAdapterFactory().create()
