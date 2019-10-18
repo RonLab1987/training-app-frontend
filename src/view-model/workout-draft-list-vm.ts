@@ -2,17 +2,24 @@ import { WorkoutDraftListVmI } from '@/view-model/workout-draft-list-vm.interfac
 import { inject, injectable } from 'tsyringe'
 import { WorkoutDraftListServiceI } from '@/domain/service-interfaces/workout-draft-list-service.interface'
 import { action, observable } from 'mobx'
-import { EntityId, TargetTrainingNode } from '@/domain/type'
+import {
+  EntityId,
+  TargetTrainingNode,
+  TargetTrainingNodeGraph
+} from '@/domain/type'
+import { ObservableEndpointI } from '@/domain/repository-interfaces/observable-endpoint.interface'
 
 @injectable()
 export class WorkoutDraftListVm implements WorkoutDraftListVmI {
   @observable.ref workoutDraftList: TargetTrainingNode[] = []
+  private readonly _workoutDraftList$: ObservableEndpointI<TargetTrainingNode[]>
 
   constructor(
     @inject('WorkoutDraftListService')
     private readonly _service: WorkoutDraftListServiceI
   ) {
-    this._service.getList$().subscribe((workoutDraftList) => {
+    this._workoutDraftList$ = this._service.getList$()
+    this._workoutDraftList$.subscribe((workoutDraftList) => {
       this._setWorkoutDraftList(workoutDraftList)
     })
   }
@@ -28,5 +35,13 @@ export class WorkoutDraftListVm implements WorkoutDraftListVmI {
 
   deleteDraft(id: EntityId): Promise<EntityId> {
     return this._service.deleteDraft(id)
+  }
+
+  suspend(): void {
+    this._workoutDraftList$.suspend()
+  }
+
+  resume(): void {
+    this._workoutDraftList$.resume()
   }
 }

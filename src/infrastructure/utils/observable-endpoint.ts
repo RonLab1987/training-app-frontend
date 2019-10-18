@@ -31,7 +31,7 @@ export class ObservableEndpoint<T> extends ReplaySubject<T>
     return Array.isArray(observers) && observers.length > 0
   }
 
-  get isSuspended() {
+  get isSuspended(): boolean {
     if (this._isSuspended || !this.hasSubscribers) {
       return true
     }

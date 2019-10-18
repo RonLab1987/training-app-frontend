@@ -11,6 +11,8 @@ import {
 @injectable()
 export class WorkoutDraftEditorServiceFactory
   implements WorkoutDraftEditorServiceFactoryI {
+  private _services: Map<EntityId, WorkoutDraftEditorServiceI> = new Map()
+
   constructor(
     @inject('WorkoutDraftRepository')
     private readonly _repository: WorkoutDraftRepositoryI,
@@ -19,7 +21,10 @@ export class WorkoutDraftEditorServiceFactory
   ) {}
 
   create(id: EntityId): WorkoutDraftEditorServiceI {
-    return new this._serviceConstructor(id, this._repository)
+    if (!this._services.has(id)) {
+      this._services.set(id, new this._serviceConstructor(id, this._repository))
+    }
+    return this._services.get(id)!
   }
 }
 

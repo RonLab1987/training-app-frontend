@@ -48,7 +48,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Observer } from 'mobx-vue'
 import { WorkoutDraftListVmI } from '@/view-model/workout-draft-list-vm.interface'
 import { EntityId } from '@/domain/type'
-import { toDetailViewCallbackI } from '@/router/types'
+import { GoToDetailViewRouteCallbackI } from '@/router/types'
 
 @Observer
 @Component
@@ -58,7 +58,7 @@ export default class WorkoutDraftListWidget extends Vue {
   @Prop({ required: true })
   readonly workoutDraftListVm!: WorkoutDraftListVmI
   @Prop({ required: true })
-  readonly goToWorkoutDraftEditor!: toDetailViewCallbackI
+  readonly goToWorkoutDraftEditor!: GoToDetailViewRouteCallbackI
 
   addWorkoutDraftHandler() {
     this.addInProgress = true

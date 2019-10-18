@@ -2,9 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { container } from 'tsyringe'
 import { WorkoutDraftListVmI } from '@/view-model/workout-draft-list-vm.interface'
-import { toDetailViewCallbackI } from '@/router/types'
+import {
+  GoToDetailViewRouteCallbackI,
+  GoToViewRouteCallbackI
+} from '@/router/types'
 import { EntityId } from '@/domain/type'
-import { WorkoutDraftEditorServiceFactoryI } from '@/domain/service-interfaces/workout-draft-editor-service.interface'
 import { WorkoutDraftEditorVmFactoryI } from '@/view-model/workout-draft-editor-vm.interface'
 
 Vue.use(Router)
@@ -24,8 +26,9 @@ export const router = new Router({
         const workoutDraftListVm: WorkoutDraftListVmI = container.resolve(
           'WorkoutDraftListVm'
         )
-        const goToWorkoutDraftEditor: toDetailViewCallbackI = (id: EntityId) =>
-          router.push({ name: 'draftEdit', params: { id: id.toString() } })
+        const goToWorkoutDraftEditor: GoToDetailViewRouteCallbackI = (
+          id: EntityId
+        ) => router.push({ name: 'draftEdit', params: { id: id.toString() } })
         return {
           workoutDraftListVm,
           goToWorkoutDraftEditor
@@ -43,13 +46,12 @@ export const router = new Router({
         const vmFactory: WorkoutDraftEditorVmFactoryI = container.resolve(
           'WorkoutDraftEditorVmFactory'
         )
-        const vm = vmFactory.create(to.params.id)
-        console.log(vm)
-        console.log(vm._graphSource)
-        setTimeout(() => {
-          console.log(vm._graphSource)
-        }, 200)
-        return {}
+        const goBack: GoToViewRouteCallbackI = () =>
+          router.push({ name: 'dashboard' })
+        return {
+          workoutDraftEditorVm: vmFactory.create(to.params.id),
+          goBack
+        }
       },
       component: (): any =>
         import(

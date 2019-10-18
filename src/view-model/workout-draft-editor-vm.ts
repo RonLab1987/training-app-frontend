@@ -10,6 +10,7 @@ import {
   WorkoutDraftEditorVmFactoryI,
   WorkoutDraftEditorVmI
 } from '@/view-model/workout-draft-editor-vm.interface'
+import { ObservableEndpointI } from '@/domain/repository-interfaces/observable-endpoint.interface'
 
 @injectable()
 export class WorkoutDraftEditorVmFactory
@@ -28,16 +29,24 @@ export class WorkoutDraftEditorVmFactory
 
 class _WorkoutDraftEditorVm implements WorkoutDraftEditorVmI {
   @observable.ref _graphSource: TargetTrainingNodeGraph | undefined
+  private readonly _graphSource$: ObservableEndpointI<TargetTrainingNodeGraph>
 
   constructor(
     private readonly _id: EntityId,
     private readonly _service: WorkoutDraftEditorServiceI
   ) {
-    this._service
-      .getDraftGraph$()
-      .subscribe((graphSource: TargetTrainingNodeGraph) => {
-        this._seyGraphSource(graphSource)
-      })
+    this._graphSource$ = this._service.getDraftGraph$()
+    this._graphSource$.subscribe((graphSource: TargetTrainingNodeGraph) => {
+      this._seyGraphSource(graphSource)
+    })
+  }
+
+  suspend(): void {
+    this._graphSource$.suspend()
+  }
+
+  resume(): void {
+    this._graphSource$.resume()
   }
 
   @action
