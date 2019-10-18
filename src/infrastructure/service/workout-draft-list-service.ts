@@ -2,15 +2,15 @@ import { WorkoutDraftListServiceI } from '@/domain/service-interfaces/workout-dr
 import { EntityId, TargetTrainingNode } from '@/domain/type'
 import { ObservableEndpointI } from '@/domain/repository-interfaces/observable-endpoint.interface'
 import { inject, injectable } from 'tsyringe'
-import { WorkoutDraftListRepositoryI } from '@/domain/repository-interfaces/workout-draft-list-repository.interface'
+import { WorkoutDraftRepositoryI } from '@/domain/repository-interfaces/workout-draft-repository.interface'
 
 @injectable()
 export class WorkoutDraftListService implements WorkoutDraftListServiceI {
   readonly _list$: ObservableEndpointI<TargetTrainingNode[]>
 
   constructor(
-    @inject('WorkoutDraftListRepository')
-    private readonly _repository: WorkoutDraftListRepositoryI
+    @inject('WorkoutDraftRepository')
+    private readonly _repository: WorkoutDraftRepositoryI
   ) {
     this._list$ = this._repository.getList$()
   }

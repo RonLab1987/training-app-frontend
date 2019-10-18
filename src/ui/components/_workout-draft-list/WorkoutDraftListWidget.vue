@@ -8,7 +8,7 @@
         <v-list-item
           v-for="item of workoutDraftListVm.workoutDraftList"
           :key="item.id"
-          @click="toDetailViewHandler(item.id)"
+          @click="goToWorkoutDraftEditor(item.id)"
           two-line
         >
           <v-list-item-content>
@@ -58,17 +58,13 @@ export default class WorkoutDraftListWidget extends Vue {
   @Prop({ required: true })
   readonly workoutDraftListVm!: WorkoutDraftListVmI
   @Prop({ required: true })
-  readonly toEditorCallback!: toDetailViewCallbackI
-
-  toDetailViewHandler(id: EntityId) {
-    this.toEditorCallback(id)
-  }
+  readonly goToWorkoutDraftEditor!: toDetailViewCallbackI
 
   addWorkoutDraftHandler() {
     this.addInProgress = true
     this.workoutDraftListVm
       .createDraft()
-      .then((id) => this.toDetailViewHandler(id))
+      .then((id) => this.goToWorkoutDraftEditor(id))
       .catch((error) => {
         window.alert(this.$t('draftList.actions.addWorkoutDraft.errorMessage'))
       })

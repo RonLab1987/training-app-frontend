@@ -3,7 +3,7 @@
     <v-row>
       <v-col :md="6" :lg="4">
         <WorkoutDraftListWidget
-          v-bind="{ workoutDraftListVm, toEditorCallback }"
+          v-bind="{ workoutDraftListVm, goToWorkoutDraftEditor }"
         />
       </v-col>
     </v-row>
@@ -30,10 +30,10 @@ import ThePageContainer from '@/ui/components/_page/ThePageContainer.vue'
 export default class TheDraftList extends Vue {
   @Prop({ required: true }) readonly workoutDraftListVm!: WorkoutDraftListVmI
   @Prop({ required: true })
-  readonly toEditorCallback!: toDetailViewCallbackI
+  readonly goToWorkoutDraftEditor!: toDetailViewCallbackI
 
   toDetailViewHandler(id: EntityId) {
-    this.toEditorCallback(id)
+    this.goToWorkoutDraftEditor(id)
   }
 }
 </script>
