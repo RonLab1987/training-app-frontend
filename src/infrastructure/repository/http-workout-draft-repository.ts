@@ -26,14 +26,14 @@ export class HttpWorkoutDraftRepository implements WorkoutDraftRepositoryI {
   getList$(): ObservableEndpointI<TargetTrainingNode[]> {
     return ObservableEndpoint.init<TargetTrainingNode[]>(
       () => this._getList(),
-      30
+      10
     )
   }
 
   getDraftGraph$(id: EntityId): ObservableEndpointI<TargetTrainingNodeGraph> {
     return ObservableEndpoint.init<TargetTrainingNodeGraph>(
       () => this._getDraftGraph(id),
-      30
+      600
     )
   }
 

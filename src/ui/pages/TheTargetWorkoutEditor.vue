@@ -1,6 +1,6 @@
 <template>
   <ThePageContainer :title="$t('draftEditor.title')" :go-back="goBack">
-    {{ workoutDraftEditorVm._graphSource }}
+    {{ workoutDraftEditorVm.nodes.map((node) => node.name) }}
   </ThePageContainer>
 </template>
 

@@ -13,17 +13,12 @@
     "baseUrl": ".",
     "types": [
       "webpack-env",
-      "jest"
+      "jest",
+      "./lib-types/graphology.d"
     ],
     "paths": {
       "@/*": [
         "src/*"
-      ],
-      "UI/*": [
-        "src/UI/*"
-      ],
-      "Core/*": [
-        "src/Core/*"
       ]
     },
     "lib": [
@@ -38,7 +33,8 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx",
+    "lib-types/graphology.d.ts"
   ],
   "exclude": [
     "node_modules"
