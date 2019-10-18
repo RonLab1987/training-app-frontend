@@ -9,7 +9,7 @@
     </v-card-text>
 
     <v-card-actions>
-      <v-btn @click="() => vm.isActive ? vm.suspend() : vm.resume()" small>
+      <v-btn @click="() => (vm.isActive ? vm.suspend() : vm.resume())" small>
         {{ vm.isActive ? 'suspend' : 'resume' }}
       </v-btn>
     </v-card-actions>
