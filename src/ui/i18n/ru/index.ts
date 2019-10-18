@@ -1,7 +1,22 @@
 export const ru = {
+  dashboardPage: {
+    title: '#Dashboard'
+  },
   draftList: {
     title: 'Черновики',
-    menu: 'черновики'
+    actions: {
+      addWorkoutDraft: {
+        callBtn: 'Добавить тренировку',
+        errorMessage: 'Ой, что-то пошло не так'
+      },
+      deleteWorkoutDraft: {
+        callBtn: 'Удалить тренировку',
+        errorMessage: 'Ой, что-то пошло не так'
+      }
+    }
+  },
+  workout: {
+    undefinedNamePlaceholder: 'Без имени'
   },
   draftEditor: {
     title: 'Редактирование'

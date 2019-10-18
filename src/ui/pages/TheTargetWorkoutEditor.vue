@@ -1,7 +1,7 @@
 <template>
-  <v-container>
-    <h1 class="display-1">{{ $t('draftEditor.title') }}</h1>
-  </v-container>
+  <ThePageContainer :title="$t('draftEditor.title')">
+    hop hey )
+  </ThePageContainer>
 </template>
 
 <script lang="ts">
@@ -10,9 +10,14 @@ import { Observer } from 'mobx-vue'
 // import { WorkoutDraftListVmI } from '@/view-model/workout-draft-list-vm.interface'
 // import { EntityId } from '@/domain/type'
 // import { toDetailViewCallbackI } from '@/router/types'
+import ThePageContainer from '@/ui/components/_page/ThePageContainer.vue'
 
 @Observer
-@Component
+@Component({
+  components: {
+    ThePageContainer
+  }
+})
 export default class TheDraftList extends Vue {
   // @Prop({ required: true }) readonly workoutDraftListVm!: WorkoutDraftListVmI
   // @Prop({ required: true })

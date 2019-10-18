@@ -2,7 +2,7 @@ import { WorkoutDraftListVmI } from '@/view-model/workout-draft-list-vm.interfac
 import { inject, injectable } from 'tsyringe'
 import { WorkoutDraftListServiceI } from '@/domain/service-interfaces/workout-draft-list-service.interface'
 import { action, observable } from 'mobx'
-import { TargetTrainingNode } from '@/domain/type'
+import { EntityId, TargetTrainingNode } from '@/domain/type'
 
 @injectable()
 export class WorkoutDraftListVm implements WorkoutDraftListVmI {
@@ -20,5 +20,13 @@ export class WorkoutDraftListVm implements WorkoutDraftListVmI {
   @action
   private _setWorkoutDraftList(workoutDraftList: TargetTrainingNode[]) {
     this.workoutDraftList = workoutDraftList
+  }
+
+  createDraft(): Promise<EntityId> {
+    return this._service.createDraft()
+  }
+
+  deleteDraft(id: EntityId): Promise<EntityId> {
+    return this._service.deleteDraft(id)
   }
 }

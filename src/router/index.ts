@@ -13,32 +13,40 @@ export const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: 'draft'
+      redirect: 'dashboard'
     },
     {
-      path: '/draft',
-      name: 'draftList',
+      path: '/dashboard',
+      name: 'dashboard',
       props: () => {
         const workoutDraftListVm: WorkoutDraftListVmI = container.resolve(
           'WorkoutDraftListVm'
         )
-        const toEditorCallback: toDetailViewCallbackI = (id: EntityId) => {
+        const toEditorCallback: toDetailViewCallbackI = (id: EntityId) =>
           router.push({ name: 'draftEdit', params: { id: id.toString() } })
-        }
         return {
           workoutDraftListVm,
           toEditorCallback
         }
       },
       component: (): any =>
-        import(/* webpackChunkName: "draft" */ '@/ui/pages/TheDraftList.vue')
+        import(
+          /* webpackChunkName: "dashboard" */ '@/ui/pages/TheDashboard.vue'
+        )
     },
     {
       path: '/draft/:id/',
       name: 'draftEdit',
       props: () => {},
       component: (): any =>
-        import(/* webpackChunkName: "draft" */ '@/ui/pages/TheDraftEditor.vue')
+        import(
+          /* webpackChunkName: "target-workout" */ '@/ui/pages/TheTargetWorkoutEditor.vue'
+        )
+    },
+    {
+      path: '*',
+      name: '404',
+      redirect: '/'
     }
   ]
 })

@@ -1,25 +1,13 @@
 <template>
-  <v-container>
-    <h1 class="display-1">{{ $t('draftList.title') }}</h1>
-
+  <ThePageContainer :title="$t('dashboardPage.title')">
     <v-row>
-      <v-col>
-        <v-list>
-          <v-list-item
-            v-for="item of workoutDraftListVm.workoutDraftList"
-            :key="item.id"
-            @click="toDetailViewHandler(item.id)"
-            two-line
-          >
-            <v-list-item-content>
-              <v-list-item-title>{{ item.name || 'noname' }}</v-list-item-title>
-              <v-list-item-subtitle>{{ item.type_name }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+      <v-col :md="6" :lg="4">
+        <WorkoutDraftListWidget
+          v-bind="{ workoutDraftListVm, toEditorCallback }"
+        />
       </v-col>
     </v-row>
-  </v-container>
+  </ThePageContainer>
 </template>
 
 <script lang="ts">
@@ -29,8 +17,16 @@ import { WorkoutDraftListVmI } from '@/view-model/workout-draft-list-vm.interfac
 import { EntityId } from '@/domain/type'
 import { toDetailViewCallbackI } from '@/router/types'
 
+import WorkoutDraftListWidget from '@/ui/components/_workout-draft-list/WorkoutDraftListWidget.vue'
+import ThePageContainer from '@/ui/components/_page/ThePageContainer.vue'
+
 @Observer
-@Component
+@Component({
+  components: {
+    WorkoutDraftListWidget,
+    ThePageContainer
+  }
+})
 export default class TheDraftList extends Vue {
   @Prop({ required: true }) readonly workoutDraftListVm!: WorkoutDraftListVmI
   @Prop({ required: true })
