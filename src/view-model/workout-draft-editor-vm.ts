@@ -20,10 +20,22 @@ import { ObservableEndpointI } from '@/domain/repository-interfaces/observable-e
 import { TargetTrainingNodeVm } from '@/view-model/target-training-node-vm'
 
 import { createViewModel, IViewModel } from 'mobx-utils'
-import { TargetTrainingNodeVmI } from '@/view-model/target-training-node-vm.interface'
+import {
+  TargetTrainingNodeVmI,
+  TargetTrainingNodeVmSourceI
+} from '@/view-model/target-training-node-vm.interface'
 
 interface TraceDownCallbackI {
-  (id: EntityId, node: TargetTrainingNode, parentId?: EntityId): void
+  (
+    id: EntityId,
+    node: TargetTrainingNode,
+    parentId: EntityId | null,
+    level: number
+  ): void
+}
+
+interface GraphNodeAttr {
+  level: number
 }
 
 class _WorkoutDraftEditorVm implements WorkoutDraftEditorVmI {
@@ -63,17 +75,16 @@ class _WorkoutDraftEditorVm implements WorkoutDraftEditorVmI {
 
   @action
   private _syncGraph(graphSource: TargetTrainingNodeGraph) {
-    const graph: Graphology = new graphology.DirectedGraph({
+    this._rootId = graphSource.rootId
+    this._graph = new graphology.DirectedGraph({
       allowSelfLoops: false
     })
     graphSource.nodes.forEach((node) => {
-      graph.addNode(node.id, node)
+      this._graph!.addNode(node.id, node)
     })
     graphSource.edges.forEach((edge) => {
-      graph.addDirectedEdge(edge.parent, edge.child)
+      this._graph!.addDirectedEdge(edge.parent, edge.child)
     })
-    this._rootId = graphSource.rootId
-    this._graph = graph
   }
 
   private _syncNodesMap() {
@@ -86,7 +97,7 @@ class _WorkoutDraftEditorVm implements WorkoutDraftEditorVmI {
       map.delete(id)
     })
     // update exist or add new node to map
-    this._traceDown((id, source, parentId) => {
+    this._traceDown((id, source, parentId, level) => {
       if (this._nodesMap.has(id)) {
         this._updateEditableTargetTrainingNodeVm(
           this._nodesMap.get(id)!,
@@ -98,6 +109,7 @@ class _WorkoutDraftEditorVm implements WorkoutDraftEditorVmI {
         id,
         this._createEditableTargetTrainingNodeVm(
           source,
+          level,
           parentId ? this._nodesMap.get(parentId) : undefined
         )
       )
@@ -106,12 +118,16 @@ class _WorkoutDraftEditorVm implements WorkoutDraftEditorVmI {
 
   private _createEditableTargetTrainingNodeVm(
     source: TargetTrainingNode,
+    level: number,
     parent?: IViewModel<TargetTrainingNodeVmI>
   ): IViewModel<TargetTrainingNodeVmI> {
     const instance: TargetTrainingNodeVmI = plainToClass<
       TargetTrainingNodeVmI,
-      TargetTrainingNode
-    >(TargetTrainingNodeVm, source)
+      TargetTrainingNodeVmSourceI
+    >(TargetTrainingNodeVm, {
+      ...source,
+      level
+    })
     if (parent) {
       //@ts-ignore
       instance.setParent(parent)
@@ -138,17 +154,27 @@ class _WorkoutDraftEditorVm implements WorkoutDraftEditorVmI {
     this.nodes = nodes
   }
 
-  private _traceDown(callback: TraceDownCallbackI, parentId?: EntityId): void {
+  private _traceDown(
+    callback: TraceDownCallbackI,
+    parentId?: EntityId,
+    level?: number
+  ): void {
+    level = level || 0
     if (!parentId) {
-      callback(this._rootId!, this._graph!.getNodeAttributes(this._rootId))
-      this._traceDown(callback, this._rootId)
+      callback(
+        this._rootId!,
+        this._graph!.getNodeAttributes(this._rootId),
+        null,
+        level
+      )
+      this._traceDown(callback, this._rootId, level + 1)
       return
     }
     this._graph!.forEachOutNeighbor(
       parentId,
       (id: EntityId, node: TargetTrainingNode) => {
-        callback(id, node, parentId!)
-        this._traceDown(callback, id)
+        callback(id, node, parentId!, level!)
+        this._traceDown(callback, id, level! + 1)
       }
     )
   }

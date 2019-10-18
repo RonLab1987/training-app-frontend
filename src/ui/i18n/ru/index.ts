@@ -18,7 +18,10 @@ export const ru = {
   workout: {
     undefinedNamePlaceholder: 'Без имени'
   },
-  draftEditor: {
+  targetWorkoutNode: {
+    name: 'Имя'
+  },
+  targetWorkoutEditor: {
     title: 'Редактирование'
   }
 }

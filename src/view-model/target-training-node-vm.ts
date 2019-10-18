@@ -9,6 +9,7 @@ export class TargetTrainingNodeVm implements TargetTrainingNodeVmI {
   readonly parentId!: EntityId | null
   readonly type!: EntityId
   readonly type_name!: string
+  readonly level!: number
   @observable name!: string | null
   @observable active: boolean = true
   @Type(() => TargetTrainingNodeCharacteristicVm)
@@ -28,7 +29,7 @@ export class TargetTrainingNodeVm implements TargetTrainingNodeVmI {
 
   @action
   resume(): void {
-    this.active = false
+    this.active = true
   }
 
   @action
