@@ -8,6 +8,7 @@ import {
 } from '@/domain/type'
 import { ObservableEndpoint } from '@/infrastructure/utils/observable-endpoint'
 import { ObservableEndpointI } from '@/domain/repository-interfaces/observable-endpoint.interface'
+import { TargetWorkoutSetNodeNameDTO } from '@/domain/dto'
 
 @injectable()
 export class HttpWorkoutDraftRepository implements WorkoutDraftRepositoryI {
@@ -18,6 +19,8 @@ export class HttpWorkoutDraftRepository implements WorkoutDraftRepositoryI {
     `${this._endpointPrefix}/draft/${id}/delete`
   private readonly _getDraftGraphEndpoint = (id: EntityId) =>
     `${this._endpointPrefix}/draft/${id}`
+  private readonly _setNodeNameEndpoint = (id: EntityId) =>
+    `${this._endpointPrefix}/draft/${id}/set-node-name`
 
   constructor(
     @inject('HttpApiAdapter') private readonly _adapter: HttpApiAdapterI
@@ -26,14 +29,14 @@ export class HttpWorkoutDraftRepository implements WorkoutDraftRepositoryI {
   getList$(): ObservableEndpointI<TargetTrainingNode[]> {
     return ObservableEndpoint.init<TargetTrainingNode[]>(
       () => this._getList(),
-      10
+      5
     )
   }
 
   getDraftGraph$(id: EntityId): ObservableEndpointI<TargetTrainingNodeGraph> {
     return ObservableEndpoint.init<TargetTrainingNodeGraph>(
       () => this._getDraftGraph(id),
-      600
+      10
     )
   }
 
@@ -51,6 +54,18 @@ export class HttpWorkoutDraftRepository implements WorkoutDraftRepositoryI {
       this._adapter
         .delete(this._deleteDraftEndpoint(id))
         .then((response) => resolve(response.data))
+        .catch((error) => reject(error))
+    })
+  }
+
+  setNodeName(dto: TargetWorkoutSetNodeNameDTO): Promise<EntityId> {
+    const { id, ...payload } = dto
+    return new Promise((resolve, reject) => {
+      this._adapter
+        .post(this._setNodeNameEndpoint(id), payload)
+        // .then((response) => resolve(response.data))
+        // slowdown
+        .then((response) => setTimeout(() => resolve(response.data), 3000))
         .catch((error) => reject(error))
     })
   }

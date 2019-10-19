@@ -10,8 +10,7 @@ import { WorkoutDraftListVmI } from '@/view-model/workout-draft-list-vm.interfac
 import { WorkoutDraftListVm } from '@/view-model/workout-draft-list-vm'
 import {
   WorkoutDraftEditorServiceConstructorI,
-  WorkoutDraftEditorServiceFactoryI,
-  WorkoutDraftEditorServiceI
+  WorkoutDraftEditorServiceFactoryI
 } from '@/domain/service-interfaces/workout-draft-editor-service.interface'
 import {
   WorkoutDraftEditorService,

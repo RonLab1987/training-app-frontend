@@ -5,8 +5,10 @@ import { initVuetifyWithI18n } from '@/ui/plugins/vuetify'
 import { router } from '@/router'
 import App from '@/ui/App.vue'
 import './registerServiceWorker'
+import VueRx from 'vue-rx'
 
 Vue.config.productionTip = false
+Vue.use(VueRx)
 
 export const app = new Vue({
   router,

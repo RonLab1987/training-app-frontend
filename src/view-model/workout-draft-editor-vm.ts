@@ -19,11 +19,13 @@ import {
 import { ObservableEndpointI } from '@/domain/repository-interfaces/observable-endpoint.interface'
 import { TargetTrainingNodeVm } from '@/view-model/target-training-node-vm'
 
-import { createViewModel, IViewModel } from 'mobx-utils'
+import { createViewModel, IViewModel, toStream } from 'mobx-utils'
 import {
   TargetTrainingNodeVmI,
   TargetTrainingNodeVmSourceI
 } from '@/view-model/target-training-node-vm.interface'
+import { from } from 'rxjs'
+import { debounceTime, filter, map } from 'rxjs/operators'
 
 interface TraceDownCallbackI {
   (
@@ -32,10 +34,6 @@ interface TraceDownCallbackI {
     parentId: EntityId | null,
     level: number
   ): void
-}
-
-interface GraphNodeAttr {
-  level: number
 }
 
 class _WorkoutDraftEditorVm implements WorkoutDraftEditorVmI {
@@ -132,7 +130,46 @@ class _WorkoutDraftEditorVm implements WorkoutDraftEditorVmI {
       //@ts-ignore
       instance.setParent(parent)
     }
-    return createViewModel(instance)
+    const node = createViewModel(instance)
+    this._subscribeOnChanges(node)
+    return node
+  }
+
+  private _subscribeOnChanges(node: IViewModel<TargetTrainingNodeVmI>) {
+    //@ts-ignore
+    from(toStream(() => node!.name)!)
+      .pipe(
+        debounceTime(3000),
+        map((name: string | null) => {
+          return name ? name.trim() : null
+        }),
+        filter((name: string | null) => !!name && name !== node.model.name)
+      )
+      .subscribe(() => {
+        this._runUpdateNodeName(node)
+      })
+  }
+
+  private _runUpdateNodeName(node: IViewModel<TargetTrainingNodeVmI>) {
+    node.model.syncOn()
+    //@ts-ignore
+    const name = node.name
+    this._service
+      .setNodeName({
+        id: this._rootId!,
+        node_id: node.model.id,
+        name
+      })
+      .then(() => {
+        node.resetProperty('name')
+      })
+      .catch((error: any) => {
+        window.alert('Ooops!')
+        throw error
+      })
+      .finally(() => {
+        node.model.syncOff()
+      })
   }
 
   private _updateEditableTargetTrainingNodeVm(

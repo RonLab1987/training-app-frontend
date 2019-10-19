@@ -1,16 +1,21 @@
 <template>
   <v-card class="mb-5" :class="`ml-${5 * vm.level}`">
     <v-card-subtitle>
-      {{ vm.type_name }} – isActive: {{ vm.isActive }}
+      {{ vm.type_name }}
     </v-card-subtitle>
 
     <v-card-text>
-      <v-text-field v-model="vm.name" label="Имя" :disabled="!vm.isActive" />
+      <v-text-field
+        v-model="vm.name"
+        label="Имя"
+        :disabled="!vm.isActive || vm.syncInProgress"
+        :loading="vm.syncInProgress"
+      />
     </v-card-text>
 
     <v-card-actions>
       <v-btn @click="() => (vm.isActive ? vm.suspend() : vm.resume())" small>
-        {{ vm.isActive ? 'suspend' : 'resume' }}
+        {{ vm.isActive ? 'disable' : 'enable' }}
       </v-btn>
     </v-card-actions>
   </v-card>

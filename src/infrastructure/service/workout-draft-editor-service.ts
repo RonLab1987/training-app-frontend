@@ -7,6 +7,29 @@ import {
   WorkoutDraftEditorServiceFactoryI,
   WorkoutDraftEditorServiceI
 } from '@/domain/service-interfaces/workout-draft-editor-service.interface'
+import { TargetWorkoutSetNodeNameDTO } from '@/domain/dto'
+
+export const WorkoutDraftEditorService: WorkoutDraftEditorServiceConstructorI = class WorkoutDraftEditorService
+  implements WorkoutDraftEditorServiceI {
+  private readonly _graphSource$: ObservableEndpointI<TargetTrainingNodeGraph>
+
+  constructor(
+    private readonly _id: EntityId,
+    private readonly _repository: WorkoutDraftRepositoryI
+  ) {
+    this._graphSource$ = this._repository.getDraftGraph$(this._id)
+  }
+
+  getDraftGraph$(): ObservableEndpointI<TargetTrainingNodeGraph> {
+    return this._graphSource$
+  }
+
+  setNodeName(dto: TargetWorkoutSetNodeNameDTO): Promise<EntityId> {
+    return this._repository
+      .setNodeName(dto)
+      .finally(() => this._graphSource$.forceUpdate())
+  }
+}
 
 @injectable()
 export class WorkoutDraftEditorServiceFactory
@@ -25,21 +48,5 @@ export class WorkoutDraftEditorServiceFactory
       this._services.set(id, new this._serviceConstructor(id, this._repository))
     }
     return this._services.get(id)!
-  }
-}
-
-export const WorkoutDraftEditorService: WorkoutDraftEditorServiceConstructorI = class WorkoutDraftEditorService
-  implements WorkoutDraftEditorServiceI {
-  private readonly _graphSource$: ObservableEndpointI<TargetTrainingNodeGraph>
-
-  constructor(
-    private readonly _id: EntityId,
-    private readonly _repository: WorkoutDraftRepositoryI
-  ) {
-    this._graphSource$ = this._repository.getDraftGraph$(this._id)
-  }
-
-  getDraftGraph$(): ObservableEndpointI<TargetTrainingNodeGraph> {
-    return this._graphSource$
   }
 }

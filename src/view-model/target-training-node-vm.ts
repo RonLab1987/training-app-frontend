@@ -12,6 +12,7 @@ export class TargetTrainingNodeVm implements TargetTrainingNodeVmI {
   readonly level!: number
   @observable name!: string | null
   @observable active: boolean = true
+  @observable private _syncInProgress: boolean = false
   @Type(() => TargetTrainingNodeCharacteristicVm)
   characteristics!: TargetTrainingNodeCharacteristic[]
   private _parent: TargetTrainingNodeVmI | undefined
@@ -22,6 +23,11 @@ export class TargetTrainingNodeVm implements TargetTrainingNodeVmI {
     return this.active && parentIsActive
   }
 
+  @computed
+  get syncInProgress(): boolean {
+    return this._syncInProgress
+  }
+
   @action
   suspend(): void {
     this.active = false
@@ -30,6 +36,16 @@ export class TargetTrainingNodeVm implements TargetTrainingNodeVmI {
   @action
   resume(): void {
     this.active = true
+  }
+
+  @action
+  syncOn(): void {
+    this._syncInProgress = true
+  }
+
+  @action
+  syncOff(): void {
+    this._syncInProgress = false
   }
 
   @action
